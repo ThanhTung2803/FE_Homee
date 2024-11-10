@@ -1,21 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, FlatList, Image, Dimensions,StyleSheet } from 'react-native';
+import { View, FlatList, Image, Dimensions, StyleSheet, Text, TouchableOpacity, ScrollView, Modal, ImageBackground } from 'react-native';
 import { responsiveHeight as rh, responsiveWidth as rw, responsiveFontSize as rf } from 'react-native-responsive-dimensions';
-
-const images = [
-  require('../../assets/images/banner.png'),
-  'https://ketoananpha.vn/uploads/images/post/333-moi/cho-thue-nha-mat-bang-co-phai-dang-ky-kinh-doanh-01.jpg',
-  'https://res.cloudinary.com/dligpgeta/image/upload/v1728437810/Property_1_image_3_bnge2s.png',
-  'https://res.cloudinary.com/dligpgeta/image/upload/v1728437864/Property_1_image_1_ewcare.png',
-];
+import DropDownPicker from 'react-native-dropdown-picker';
+import { SelectCountry } from 'react-native-element-dropdown';
+import { images, local_data, local_price_data } from '../../assets/data/data';
 
 
 
 const Home_Tab = () => {
   const [isUserScrolling, setIsUserScrolling] = useState(false); // Flag kiểm tra xem người dùng cuộn thủ công hay không
 
-
   const [currentIndex, setCurrentIndex] = useState(0);
+
 
   const flatListRef = useRef<FlatList<string>>(null);
   // Sử dụng useRef để tạo một tham chiếu đến FlatList
@@ -45,40 +41,159 @@ const Home_Tab = () => {
   }, [currentIndex, isUserScrolling]);
 
   const renderItem = ({ item }: { item: string }) => (
-    <View style={{ width: rw(100),height: rh(20),  }}>
+    <View style={{ width: rw(100), height: rh(20), }}>
       <Image
         source={typeof item === 'string' ? { uri: item } : item} // Nếu item là chuỗi (URL), sử dụng uri, nếu là require, sử dụng trực tiếp
         style={{ width: '100%', height: rh(20) }} resizeMode="cover" />
     </View>
   );
 
+  const [country, setCountry] = useState('')
+  const [price, setPrice] = useState('')
+
+
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={images}
-        renderItem={renderItem}
-        horizontal
-        pagingEnabled // mỗi lần cuộn sẽ chỉ chuyển đến một phần tử (một ảnh) mà không thể cuộn qua nhiều phần tử cùng lúc
-        showsHorizontalScrollIndicator={false} // không có thanh cuộn ngang sẽ hiển thị trong FlatList
-        keyExtractor={(_, index) => index.toString()}
-        ref={flatListRef} // Tạo một tham chiếu để có thể truy cập và điều khiển FlatList
-      />
-    </View>
+
+    <ScrollView keyboardShouldPersistTaps="always" style={{ flex: 1, backgroundColor: '#F3F3F3' }} contentContainerStyle={{ alignItems: 'center' }}>
+      <View style={{ width: rw(100), height: rh(20) }}>
+        <FlatList
+          data={images}
+          renderItem={renderItem}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(_, index) => index.toString()}
+          ref={flatListRef}
+        />
+      </View>
+
+      <ImageBackground
+        source={{ uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnhKo9jjoYpzUHGv_JZLvg1lrXw5CKYnPehw&s' }}
+        style={styles.imagebackgriod}
+        resizeMode="cover">
+        <Text style={{ fontSize: 20, color: 'black', fontWeight: '400', marginLeft: rw(3), flex: 1, marginTop: 5,fontFamily:'Open Sans Condensed',}} >Danh sách nhà cho thuê</Text>
+
+        <View style={{ width: '100%', height: rh(5), flexDirection: 'row', alignItems: 'center', marginBottom: rh(0.5), flex: 1, }}>
+          <SelectCountry
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            imageStyle={styles.imageStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            search
+            maxHeight={200}
+            value={country}
+            data={local_data}
+            valueField="value"
+            labelField="lable"
+            imageField="image"
+            placeholder="Khu vực"
+            searchPlaceholder="Tìm kiếm..."
+            onChange={e => {
+                setCountry(prevCountry => (prevCountry === e.value ? '' : e.value));
+              }}
+
+            activeColor='#CDC9C9'
+            iconColor='black'
 
 
-  );
+            itemTextStyle={styles.itemTextStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+          />
+
+          <View style={{ width: rw(3) }} />
+
+          <SelectCountry
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            imageStyle={styles.imageStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            maxHeight={200}
+            value={price}
+            data={local_price_data}
+            valueField="value"
+            labelField="label"
+            imageField="image"
+            placeholder="Giá"
+            onChange={e => {
+              setPrice(prevPrice => (prevPrice === e.value ? '' : e.value)); {/* Cập nhật giá tiền khi thay đổi */ }
+            }}
+            activeColor='#CDC9C9'
+            iconColor='black'
+            itemTextStyle={styles.itemTextStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+          />
+
+
+        </View>
+
+      </ImageBackground>
+
+
+
+
+    </ScrollView>
+
+  )
 };
 
 export default Home_Tab;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-     backgroundColor: '#FFFFFF', 
-    justifyContent: 'center',
-    alignItems: 'center',
+  dropdown: {
+    height: rh(4.7),
+    width: rw(28),
+    marginLeft: rw(2),
+    backgroundColor: 'white',
+    borderRadius: 8
+  },
+  containerStyle: {
+    color: 'red'
+  },
+  imageStyle: {
+    width: 0,
+    height: 0,
+  },
+  placeholderStyle: {
+    fontSize: 15,
+    marginLeft: rw(3),
+    color: 'black',
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    marginLeft: 8,
+    color: 'black'
+  },
+  itemTextStyle: {
+    color: 'white',
+    fontSize: 30
+  },
+  iconStyle: {
+    width: 23,
+    height: 23,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+
+  imagebackgriod:{
+    width: rw(98),
+    height: rh(11),
+    marginLeft: rw(1),
+    marginRight: rw(1),
+    marginTop: rh(3),
+    borderRadius: 8,
+    overflow: 'hidden',
+    
   }
+
 });
+
+
+
 
 
 
