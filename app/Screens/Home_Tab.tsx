@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, FlatList, Image, Dimensions, StyleSheet, Text, TouchableOpacity, ScrollView, Modal, ImageBackground } from 'react-native';
+import { View, FlatList, Image, Dimensions, StyleSheet, Text, TouchableOpacity, ScrollView, Modal, ImageBackground, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { responsiveHeight as rh, responsiveWidth as rw, responsiveFontSize as rf } from 'react-native-responsive-dimensions';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SelectCountry } from 'react-native-element-dropdown';
 import { images, local_data, local_price_data } from '../../assets/data/data';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -11,6 +12,41 @@ const Home_Tab = () => {
   const [isUserScrolling, setIsUserScrolling] = useState(false); // Flag kiểm tra xem người dùng cuộn thủ công hay không
 
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const DATA = [
+    {
+      id: '1',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu ',
+      image: 'https://donggia.vn/wp-content/uploads/2019/11/thiet-ke-noi-that-phong-khach-chung-cu-dep-2020-12.jpg'
+    },
+    {
+      id: '2',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
+      image: 'https://decoxdesign.com/upload/images/thiet-ke-noi-that-saigon-royal-43m2-de06-02-phong-khach-decox-design.jpg'
+    },
+    {
+      id: '3',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
+      image: 'https://truongthang.vn/wp-content/uploads/2023/08/truong-thang-an-tuong-voi-noi-that-can-ho-chung-cu-2-phong-ngu.jpg'
+    },
+    {
+      id: '4',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu ',
+      image: 'https://azfuni.com/wp-content/uploads/2022/04/thiet-ke-chung-cu-kieu-han-quoc-2.jpg'
+    },
+    {
+      id: '5',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
+      image: 'https://decoxdesign.com/upload/images/thiet-ke-noi-that-saigon-royal-43m2-de06-02-phong-khach-decox-design.jpg'
+    },
+    {
+      id: '6',
+      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8eZoMLen0YeK4Wnd0JLEMb3jrFVFO8ypLxCbHv2Pmq5mPpOcdgIh3v2PuvolordFtqtk&usqp=CAU'
+    },
+
+
+  ];
 
 
   const flatListRef = useRef<FlatList<string>>(null);
@@ -53,88 +89,127 @@ const Home_Tab = () => {
 
 
 
-  return (
+  interface Item {
+    id: string,
+    title: string;
+    image: string
 
-    <ScrollView keyboardShouldPersistTaps="always" style={{ flex: 1, backgroundColor: '#F3F3F3' }} contentContainerStyle={{ alignItems: 'center' }}>
-      <View style={{ width: rw(100), height: rh(20) }}>
-        <FlatList
-          data={images}
-          renderItem={renderItem}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(_, index) => index.toString()}
-          ref={flatListRef}
-        />
+  }
+
+
+  const renderItem2 = ({ item }: { item: Item }) => (
+    <View style={styles.item}>
+      <Image
+        source={{ uri: item.image }}
+        style={{ width: '100%', height: rh(25) }} resizeMode="cover" />
+      <View style={{ width: '100%', height: rh(5), marginTop: rh(1), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 5, color: 'black', marginLeft: rw(2) }}>{item.title}</Text>
+        <TouchableOpacity>
+          <Image
+            source={require('../../assets/icon/daluu.png')}
+            style={{ width: rw(6), height: rh(4), marginRight: rw(2) }} resizeMode="contain" />
+        </TouchableOpacity>
       </View>
 
-      <ImageBackground
-        source={{ uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnhKo9jjoYpzUHGv_JZLvg1lrXw5CKYnPehw&s' }}
-        style={styles.imagebackgriod}
-        resizeMode="cover">
-        <Text style={{ fontSize: 20, color: 'black', fontWeight: '400', marginLeft: rw(3), flex: 1, marginTop: 5,fontFamily:'Open Sans Condensed',}} >Danh sách nhà cho thuê</Text>
-
-        <View style={{ width: '100%', height: rh(5), flexDirection: 'row', alignItems: 'center', marginBottom: rh(0.5), flex: 1, }}>
-          <SelectCountry
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            imageStyle={styles.imageStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            search
-            maxHeight={200}
-            value={country}
-            data={local_data}
-            valueField="value"
-            labelField="lable"
-            imageField="image"
-            placeholder="Khu vực"
-            searchPlaceholder="Tìm kiếm..."
-            onChange={e => {
-                setCountry(prevCountry => (prevCountry === e.value ? '' : e.value));
-              }}
-
-            activeColor='#CDC9C9'
-            iconColor='black'
-
-
-            itemTextStyle={styles.itemTextStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-          />
-
-          <View style={{ width: rw(3) }} />
-
-          <SelectCountry
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            imageStyle={styles.imageStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            maxHeight={200}
-            value={price}
-            data={local_price_data}
-            valueField="value"
-            labelField="label"
-            imageField="image"
-            placeholder="Giá"
-            onChange={e => {
-              setPrice(prevPrice => (prevPrice === e.value ? '' : e.value)); {/* Cập nhật giá tiền khi thay đổi */ }
-            }}
-            activeColor='#CDC9C9'
-            iconColor='black'
-            itemTextStyle={styles.itemTextStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-          />
-
-
-        </View>
-
-      </ImageBackground>
+    </View>
+  );
 
 
 
+  const [showTabs, setShowTabs] = useState(true);
 
-    </ScrollView>
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={DATA}
+        renderItem={renderItem2}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={
+          <View style={{ width: rw(100), height: rh(32), marginBottom: 10 }}>
+            <FlatList
+              data={images}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(_, index) => index.toString()}
+              ref={flatListRef}
+            />
+            <ImageBackground
+              source={{ uri: 'https://static.vecteezy.com/system/resources/thumbnails/025/373/993/small_2x/a-house-key-on-a-keychain-on-a-blue-background-created-with-generative-ai-technology-free-photo.jpg' }}
+              style={styles.imagebackgriod}
+              resizeMode="cover">
+              <Image
+                source={require('../../assets/images/name.png')}
+                style={{ width: rw(25), height: rh(4), marginLeft: rw(2) }} resizeMode="contain" />
+              <View style={{ width: '100%', height: rh(5), flexDirection: 'row', alignItems: 'center', marginBottom: rh(0.5), flex: 1, }}>
+                <SelectCountry
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  imageStyle={styles.imageStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  search
+                  maxHeight={200}
+                  value={country}
+                  data={local_data}
+                  valueField="value"
+                  labelField="lable"
+                  imageField="image"
+                  placeholder="Khu vực"
+                  searchPlaceholder="Tìm kiếm..."
+                  searchPlaceholderTextColor=''
+                  onChange={e => {
+                    setCountry(prevCountry => (prevCountry === e.value ? '' : e.value));
+                  }}
+
+                  activeColor='#CDC9C9'
+                  iconColor='black'
+
+
+                  itemTextStyle={styles.itemTextStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                />
+
+                <View style={{ width: rw(3) }} />
+
+                <SelectCountry
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  imageStyle={styles.imageStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  maxHeight={200}
+                  value={price}
+                  data={local_price_data}
+                  valueField="value"
+                  labelField="label"
+                  imageField="image"
+                  placeholder="Giá"
+                  onChange={e => {
+                    setPrice(prevPrice => (prevPrice === e.value ? '' : e.value)); {/* Cập nhật giá tiền khi thay đổi */ }
+                  }}
+                  activeColor='#CDC9C9'
+                  iconColor='black'
+                  itemTextStyle={styles.itemTextStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                />
+
+
+              </View>
+
+
+
+
+            </ImageBackground>
+
+          </View>
+
+
+        }
+      />
+    </SafeAreaView>
+
 
   )
 };
@@ -142,15 +217,16 @@ const Home_Tab = () => {
 export default Home_Tab;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: rh(11),
+  },
   dropdown: {
     height: rh(4.7),
-    width: rw(28),
+    width: rw(27),
     marginLeft: rw(2),
     backgroundColor: 'white',
     borderRadius: 8
-  },
-  containerStyle: {
-    color: 'red'
   },
   imageStyle: {
     width: 0,
@@ -179,18 +255,69 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  imagebackgriod:{
+  imagebackgriod: {
     width: rw(98),
     height: rh(11),
     marginLeft: rw(1),
     marginRight: rw(1),
     marginTop: rh(3),
+    marginBottom: rh(1),
     borderRadius: 8,
     overflow: 'hidden',
-    
-  }
+    backgroundColor:'#DB6F16'
 
+
+  },
+
+
+
+
+
+
+  item: {
+    backgroundColor: 'white',
+    width: rw(98),
+    height: rh(32),
+    marginBottom: rh(1),
+    marginTop: rh(3),
+    marginLeft: '1%'
+  },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
