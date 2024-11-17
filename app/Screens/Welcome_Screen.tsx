@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
+import { CommonActions, NavigationProp } from '@react-navigation/native';
 
 
 // Định nghĩa interface Props
@@ -9,9 +9,22 @@ interface Props {
 }
 
 const WelcomeScreen: React.FC<Props> = ({ navigation }) => {
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     navigation.navigate('HomeTabs');
+  //   }, 3000); 
+
+  //   return () => clearTimeout(timer); 
+  // }, [navigation]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('HomeTabs');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'HomeTabs' }], // Chỉ giữ lại màn hình 'HomeTabs' trong ngăn xếp
+        })
+      );
     }, 3000); 
 
     return () => clearTimeout(timer); 

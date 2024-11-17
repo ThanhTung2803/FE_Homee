@@ -1,36 +1,74 @@
 import React from 'react';
-import {View,Text,Image,TouchableOpacity,ScrollView,SafeAreaView,StyleSheet,Dimensions,Platform,StatusBar,} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { responsiveHeight as rh, responsiveWidth as rw, responsiveFontSize as rf } from 'react-native-responsive-dimensions';
 
 // Giả lập dữ liệu collections
 const collections = [
   {
     id: '1',
     title: 'cv fe',
-    image: 'https://everon.com/upload/upload-images/trang-tri-phong-ngu-homestay-5.jpg',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
   },
   {
     id: '2',
     title: 'nhà thuê vin',
-    image: 'https://donggia.vn/wp-content/uploads/2019/11/thiet-ke-noi-that-phong-khach-chung-cu-dep-2020-12.jpg',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
   },
   {
     id: '3',
     title: 'ăn vin',
-    image: 'https://www.lanha.vn/wp-content/uploads/2023/06/thiet-ke-phong-khach-chung-cu-13.jpg.webp',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
   },
   {
     id: '4',
     title: 'archy',
-    image: 'https://scontent.fhan5-2.fna.fbcdn.net/v/t1.15752-9/462542419_1190157268717356_4286741082016937685_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=9f807c&_nc_ohc=Zuypi1gZrrMQ7kNvgEWLcYH&_nc_zt=23&_nc_ht=scontent.fhan5-2.fna&oh=03_Q7cD1QEK-jMNvhM5pv69bjdQAvZSH9lFYITsthnkM5kcxb2oDw&oe=6761764B',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
   },
   {
     id: '5',
     title: 'an dan phuong',
-    image: 'https://scontent.fhan5-2.fna.fbcdn.net/v/t1.15752-9/462551291_523445957278707_4030586852048686196_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=9f807c&_nc_ohc=EUS0Or0VfyAQ7kNvgH6hGNQ&_nc_zt=23&_nc_ht=scontent.fhan5-2.fna&oh=03_Q7cD1QGTqYG6LQs_nb3NXAbXBeHgCw_nRvKvNyrRnWPWkmdfsA&oe=67616D99',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
   },
- 
+  {
+    id: '6',
+    title: 'lam dep',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+  },
+  {
+    id: '7',
+    title: 'cv của huyen',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+  },
+  {
+    id: '8',
+    title: 'học',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+  },
+  {
+    id: '9',
+    title: 'học',
+    privacy: 'Chỉ mình tôi',
+    image: 'https://cdn1.tuoitre.vn/thumb_w/1200/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+  },
 ];
 
 const { width } = Dimensions.get('window');
@@ -38,14 +76,25 @@ const COLUMN_GAP = 12;
 const NUM_COLUMNS = 2;
 const ITEM_WIDTH = (width - (NUM_COLUMNS + 1) * COLUMN_GAP) / NUM_COLUMNS;
 
-const Saved_Tab = () => {
+export default function Test() {
   const navigation = useNavigation();
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Bộ sưu tập</Text>  
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={{ uri: 'https://cdn-icons-png.freepik.com/256/5467/5467935.png?semt=ais_hybrid' }}
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Bộ sưu tập</Text>
+        <View>
+          <Text style={styles.createButton}></Text>
+        </View>
       </View>
 
       {/* Title */}
@@ -67,7 +116,7 @@ const Saved_Tab = () => {
               <Image source={{ uri: item.image }} style={styles.itemImage} />
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                {/* <Text style={styles.itemPrivacy}>{item.privacy}</Text> */}
+                <Text style={styles.itemPrivacy}>{item.privacy}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -77,26 +126,26 @@ const Saved_Tab = () => {
      
     </SafeAreaView>
   );
-  
 }
-
-export default Saved_Tab
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    paddingBottom:rh(9)
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+  },
+  backIcon: {
+    width: 24,
+    height: 24,
   },
   headerTitle: {
     fontSize: 18,

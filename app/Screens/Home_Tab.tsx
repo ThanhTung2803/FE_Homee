@@ -3,51 +3,24 @@ import { View, FlatList, Image, Dimensions, StyleSheet, Text, TouchableOpacity, 
 import { responsiveHeight as rh, responsiveWidth as rw, responsiveFontSize as rf } from 'react-native-responsive-dimensions';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SelectCountry } from 'react-native-element-dropdown';
-import { images, local_data, local_price_data } from '../../assets/data/data';
+import { images, local_data, local_price_data,Test } from '../../assets/data/data';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationProp } from '@react-navigation/native';
+import { Item } from '../Model/Item_Type';
+
+interface Props {
+  navigation: NavigationProp<any>; //   thuộc tính tên là navigation với kiểu NavigationProp
+}
+//React.FC<Props> là cách bạn nói với TypeScript: "Dữ liệu (props) của tôi sẽ có những gì và kiểu dữ liệu của chúng là gì."
+//props dùng để gửi dữ liệu từ bên ngoài vào component.
+const Home_Tab: React.FC<Props> = ({ navigation }) => {
 
 
-
-const Home_Tab = () => {
   const [isUserScrolling, setIsUserScrolling] = useState(false); // Flag kiểm tra xem người dùng cuộn thủ công hay không
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const DATA = [
-    {
-      id: '1',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu ',
-      image: 'https://donggia.vn/wp-content/uploads/2019/11/thiet-ke-noi-that-phong-khach-chung-cu-dep-2020-12.jpg'
-    },
-    {
-      id: '2',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
-      image: 'https://decoxdesign.com/upload/images/thiet-ke-noi-that-saigon-royal-43m2-de06-02-phong-khach-decox-design.jpg'
-    },
-    {
-      id: '3',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
-      image: 'https://truongthang.vn/wp-content/uploads/2023/08/truong-thang-an-tuong-voi-noi-that-can-ho-chung-cu-2-phong-ngu.jpg'
-    },
-    {
-      id: '4',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu ',
-      image: 'https://azfuni.com/wp-content/uploads/2022/04/thiet-ke-chung-cu-kieu-han-quoc-2.jpg'
-    },
-    {
-      id: '5',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
-      image: 'https://decoxdesign.com/upload/images/thiet-ke-noi-that-saigon-royal-43m2-de06-02-phong-khach-decox-design.jpg'
-    },
-    {
-      id: '6',
-      title: 'Cho thuê chung cư giá Hà Nội .Giá 4 triệu',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8eZoMLen0YeK4Wnd0JLEMb3jrFVFO8ypLxCbHv2Pmq5mPpOcdgIh3v2PuvolordFtqtk&usqp=CAU'
-    },
-
-
-  ];
-
+  
 
   const flatListRef = useRef<FlatList<string>>(null);
   // Sử dụng useRef để tạo một tham chiếu đến FlatList
@@ -88,42 +61,37 @@ const Home_Tab = () => {
   const [price, setPrice] = useState('')
 
 
-
-  interface Item {
-    id: string,
-    title: string;
-    image: string
-
-  }
-
-
   const renderItem2 = ({ item }: { item: Item }) => (
-    <View style={styles.item}>
+    <TouchableOpacity 
+      style={styles.item}
+      onPress={() => navigation.navigate('Detail_Screen', { item: item })}
+
+      >
       <Image
-        source={{ uri: item.image }}
-        style={{ width: '100%', height: rh(25) }} resizeMode="cover" />
+        source={{ uri: item.images[0].uri }}
+        style={{ width: '100%', height: rh(25) }}
+        resizeMode="cover"
+      />
       <View style={{ width: '100%', height: rh(5), marginTop: rh(1), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 5, color: 'black', marginLeft: rw(2) }}>{item.title}</Text>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Image
             source={require('../../assets/icon/daluu.png')}
-            style={{ width: rw(6), height: rh(4), marginRight: rw(2) }} resizeMode="contain" />
-        </TouchableOpacity>
+            style={{ width: rw(6), height: rh(4), marginRight: rw(2) }}
+            resizeMode="contain"
+          />
+        </TouchableOpacity> */}
       </View>
-
-    </View>
+    </TouchableOpacity>
   );
 
-
-
-  const [showTabs, setShowTabs] = useState(true);
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={Test}
         renderItem={renderItem2}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         ListHeaderComponent={
           <View style={{ width: rw(100), height: rh(32), marginBottom: 10 }}>
             <FlatList
@@ -219,7 +187,8 @@ export default Home_Tab;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: rh(11),
+    backgroundColor: '#fff',
+    paddingBottom:rh(9)
   },
   dropdown: {
     height: rh(4.7),
@@ -280,7 +249,12 @@ const styles = StyleSheet.create({
     height: rh(32),
     marginBottom: rh(1),
     marginTop: rh(3),
-    marginLeft: '1%'
+    marginLeft: '1%',
+
+    borderRadius: 8,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
 });
 
